@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Welcome to Catering & Banquet Plus - Login</title>
+    {% load bootstrap4 %}
+    {% bootstrap_css %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+          integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <style>
+        html {
+            position: relative;
+            min-height: 100%;
+        }
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            /* Set the fixed height of the footer here */
+            height: 60px;
+            line-height: 60px; /* Vertically center the text there */
+            background-color: #f5f5f5;
+        }
+        body{
+            background: #f8f9fa !important;
+            font-family: 'Avenir Next Pro', sans-serif;
+            font-size: 14px;
+        }
+        .dropdown-submenu {
+            position: relative;
+        }
+        .dropdown-submenu>.dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: 0px;
+            margin-left: 0px;
+        }
+
+        .dropdown-submenu:hover>.dropdown-menu {
+            display: block;
+        }
+        .badge{
+            font-size: 12px !important;
+            font-weight: bold !important;
+        }
+    </style>
+
+</head>
+<body>
+{% load mptt_tags %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Catering & Banquet Pluss</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active ml-5">
+                <a class="nav-link" href="/dashboard">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item dropdown ml-5">
+                <a id="navbarDropdown" role="button" data-toggle="dropdown" class="nav-link dropdown-toggle"
+                   href="" aria-haspopup="true" aria-expanded="false">
+                    Menu
+                </a>
+
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {% recursetree categories %}
+                        <li class="dropdown-submenu">
+                            <a class="dropdown-item" href={{ node.slug }} >{{ node }}</a>
+                            {% if children %}
+                                <ul class="dropdown-menu">
+                                    {{ children }}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endrecursetree %}
+                </ul>
+
+            </li>
+            <li class="nav-item dropdown ml-5">
+                <a class="nav-link dropdown-toggle"
+                   href="#" id="navbarDropdown" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Order
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">New Order</a>
+                    <a class="dropdown-item" href="#">History</a>
+                    <a class="dropdown-item" href="#">Complain</a>
+                    <a class="dropdown-item" href="#">Track your order</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown ml-5">
+                <a class="nav-link dropdown-toggle"
+                   href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Profile
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Settings</a>
+                    <a class="dropdown-item" href="/change_password">Change Password</a>
+                </div>
+            </li>
+            <li class="nav-item ml-5">
+                <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i></a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0 ml-5">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-5">
+    {% for foo in breadcrumb %}
+        <li class="breadcrumb-item">
+            <a href="{{ foo.slug }}">{{ foo }}</a>
+        </li>
+    {% endfor %}
+    </ol>
+</nav>
+<div class="container-fluid mb-5">
+            <div class="row">
+                {% for meal in meals %}
+                    <div class="col-sm-{% if meals|length == 2 %}3 {% else %} 3 mx-auto{% endif %} mb-2">
+                        <div class="card mb-4" style="width: 18rem;">
+                            {% if meal.image %}
+                                <img class="card-img-top img img-responsive img-thumbnail"
+                                     src="{{ meal.image.url }}" alt="{{ meal.name }}">
+                            {% endif %}
+                            <div class="card-body" style="background: #610303; color: wheat;">
+                                <h5 class="card-title">{{ meal.name }}</h5>
+                                <p class="card-text">{{ meal.description }}</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">{{ meal.category }}</li>
+                                <li class="list-group-item">
+                                    <span class="badge badge-success">E£ {{ meal.price }}</span></li>
+                            </ul>
+                            <div class="card-body">
+                                <div class="input-group cart_item">
+                                    <div class="input-group-prepend">
+                                        <button class="btn input-group-text add_to_cart"
+                                                id="btnGroupAddon" data-meal_id="{{ meal.id }}">
+                                            <i class="fas fa-plus"></i></button>
+                                    </div>
+                                    <input type="number" class="form-control" aria-describedby="btnGroupAddon"
+                                           id="{{ meal.id }}" value="0">
+                                    <div class="input-group-append">
+                                        <button class="btn input-group-text" id="btnGroupAddon">
+                                            <i class="fas fa-minus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+<footer>
+    <div class="container-fluid">
+        <div class="row" style="background: #039c03;">
+            <div class="col-lg-12 p-2">
+                <button id="cart_total" class="float-sm-left btn btn-success"> </button>
+                <button class="btn btn-success float-sm-right">View Cart <i class="fas fa-shopping-bag"></i></button>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</div>
+{% bootstrap_javascript jquery='full' %}
+<script>
+    $(".btn-group, .dropdown").hover(
+        function () {
+            $('>.dropdown-menu', this).stop(true, true).fadeIn("fast");
+            $(this).addClass('open');
+        },
+        function () {
+            $('>.dropdown-menu', this).stop(true, true).fadeOut("fast");
+            $(this).removeClass('open');
+        });
+
+    function get_cart(){
+        $.get('/cart/get_cart_item', function (response) {
+            console.log(response);
+            $.each(response.content, function (row, item) {
+                $('#'+item.meal_id).val(item.quantity);
+            });
+
+            $('#cart_total').text(response.total + ' item    |   E£ '+ response.prices_total);
+        });
+    }
+
+    get_cart();
+    $('.add_to_cart').click(function (e) {
+        e.preventDefault();
+        meal_id = $(this).data('meal_id');
+        $.ajax({
+            url: '/cart/add_to_cart',
+            type: 'POST',
+            data: {meal_id: meal_id, csrfmiddlewaretoken: '{{ csrf_token }}'}
+        }).done(function (response) {
+            $('#'+meal_id).val(response.quantity);
+        }).fail(function (xhr) {
+            
+        }).always(function () {
+            get_cart();
+        });
+    });
+
+</script>
+</body>
+</html>
+

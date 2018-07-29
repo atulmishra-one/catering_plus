@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Welcome to Catering & Banquet Plus - Login</title>
+    {% load bootstrap4 %}
+    {% bootstrap_css %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+          integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <style>
+        body{
+            background: #f8f9fa !important;
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-sm-7 mx-auto mt-5">
+            <h1 class="text">Catering <span style="color: red;">&</span> Banquet <span style="color: red;">Pluss</span></h1>
+            <br><br>
+            <address>
+                <small>
+                    4B Al-Sahaba, <br>
+                    Al-Keram St., Al-Sefarat Zone, <br>
+                    Nasr City, Cairo 11471. Eqypt.
+                </small>
+                <ul class="list-inline">
+                    <li class="list-inline-item"><i class="fas fa-at"></i> info@cateringpluss.com</li>
+                    <li class="list-inline-item"><i class="fas fa-phone"></i> +20 223 522 675</li>
+                    <li class="list-inline-item"><i class="fas fa-fax"></i> +20 223 522 677</li>
+                </ul>
+            </address>
+        </div>
+        <div class="col-sm-5 mx-auto mt-5">
+            {% bootstrap_messages %}
+            <form method="post" class="form">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i>&nbsp;Login</button>
+                    <a class="btn btn-info" href="/sign_up"><i class="fas fa-user-plus"></i>&nbsp;Sign up</a>
+                    <a href="/password_reset">Forgot Password</a>
+                {% endbuttons %}
+            </form>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-lg-12">
+            <hr>
+            <small class="ml-5">Copyright &copy; 2020. All rights reserved!</small>
+        </div>
+    </div>
+</div>
+
+{% bootstrap_javascript jquery='full' %}
+</body>
+</html>
