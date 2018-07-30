@@ -14,16 +14,6 @@
             position: relative;
             min-height: 100%;
         }
-        footer {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            /* Set the fixed height of the footer here */
-            height: 60px;
-            line-height: 60px; /* Vertically center the text there */
-            background-color: #f5f5f5;
-        }
         body{
             background: #f8f9fa !important;
             font-family: 'Avenir Next Pro', sans-serif;
@@ -90,6 +80,7 @@
                     Order
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">New Order</a>
                     <a class="dropdown-item" href="#">History</a>
                     <a class="dropdown-item" href="#">Complain</a>
                     <a class="dropdown-item" href="#">Track your order</a>
@@ -117,63 +108,50 @@
 </nav>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb mb-5">
-    {% for foo in breadcrumb %}
-        <li class="breadcrumb-item">
-            <a href="{{ foo.slug }}">{{ foo }}</a>
-        </li>
-    {% endfor %}
+        {% for foo in breadcrumb %}
+            <li class="breadcrumb-item">
+                <a href="{{ foo.slug }}">{{ foo }}</a>
+            </li>
+        {% endfor %}
     </ol>
 </nav>
-<div class="container-fluid mb-5">
-            <div class="row">
-                {% for meal in meals %}
-                    <div class="col-sm-{% if meals|length == 2 %}3 {% else %} 3 mx-auto{% endif %} mb-2">
-                        <div class="card mb-4" style="width: 18rem;">
-                            {% if meal.image %}
-                                <img class="card-img-top img img-responsive img-thumbnail"
-                                     src="{{ meal.image.url }}" alt="{{ meal.name }}">
-                            {% endif %}
-                            <div class="card-body" style="background: #610303; color: wheat;">
-                                <h5 class="card-title">{{ meal.name }}</h5>
-                                <p class="card-text">{{ meal.description }}</p>
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">{{ meal.category }}</li>
-                                <li class="list-group-item">
-                                    <span class="badge badge-success">E£ {{ meal.price }}</span></li>
-                            </ul>
-                            <div class="card-body">
-                                <div class="input-group cart_item">
-                                    <div class="input-group-prepend">
-                                        <button class="btn input-group-text add_to_cart"
-                                                id="btnGroupAddon" data-meal_id="{{ meal.id }}">
-                                            <i class="fas fa-plus"></i></button>
-                                    </div>
-                                    <input type="number" class="form-control" aria-describedby="btnGroupAddon"
-                                           id="{{ meal.id }}" value="0">
-                                    <div class="input-group-append">
-                                        <button class="btn input-group-text remove_from_cart"
-                                                data-meal_id="{{ meal.id }}" id="btnGroupAddon">
-                                            <i class="fas fa-minus"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
+<div class="container mb-5">
+    <h2>Orders</h2>
+    <div class="row">
+        <div class="mx-auto col-md-12">
+            <table class="table w-100 table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Meals</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for order in object_list %}
+                        <tr>
+                            <td>{{ order.order_date }}</td>
+                            <td>{{ order.get_status_display }}</td>
+                            <td>
+                                <table class="table">
+                                    <tbody>
+                                    {% for meal in order.cart.cartitems_set.all %}
+                                        <tr>
+                                            <td>{{ meal }}</td>
+                                            <td>{{ meal.quantity }}</td>
+                                            <td>{{ meal.meal.price }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    {% endfor %}
 
-<footer>
-    <div class="container-fluid">
-        <div class="row" style="background: #039c03;">
-            <div class="col-lg-12 p-2">
-                <button id="cart_total" class="float-sm-left btn btn-success"> </button>
-                <a class="btn btn-success float-sm-right" href="/cart/view_cart">View Cart <i class="fas fa-shopping-bag"></i></a>
-            </div>
+                </tbody>
+            </table>
         </div>
     </div>
-</footer>
-
 </div>
 {% bootstrap_javascript jquery='full' %}
 <script>
@@ -186,51 +164,6 @@
             $('>.dropdown-menu', this).stop(true, true).fadeOut("fast");
             $(this).removeClass('open');
         });
-
-    function get_cart(){
-        $.get('/cart/get_cart_item', function (response) {
-            console.log(response);
-            $.each(response.content, function (row, item) {
-                $('#'+item.meal_id).val(item.quantity);
-            });
-
-            $('#cart_total').text(response.total + ' item    |   E£ '+ response.prices_total);
-        });
-    }
-
-    get_cart();
-    $('.add_to_cart').click(function (e) {
-        e.preventDefault();
-        meal_id = $(this).data('meal_id');
-        $.ajax({
-            url: '/cart/add_to_cart',
-            type: 'POST',
-            data: {meal_id: meal_id, csrfmiddlewaretoken: '{{ csrf_token }}'}
-        }).done(function (response) {
-            $('#'+meal_id).val(response.quantity);
-        }).fail(function (xhr) {
-            
-        }).always(function () {
-            get_cart();
-        });
-    });
-
-    $('.remove_from_cart').click(function (e) {
-        e.preventDefault();
-        meal_id = $(this).data('meal_id');
-        $.ajax({
-            url: '/cart/remove_from_cart',
-            type: 'POST',
-            data: {meal_id: meal_id, csrfmiddlewaretoken: '{{ csrf_token }}'}
-        }).done(function (response) {
-            $('#'+meal_id).val(response.quantity);
-        }).fail(function (xhr) {
-
-        }).always(function () {
-            get_cart();
-        });
-    });
-
 </script>
 </body>
 </html>
