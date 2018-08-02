@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/logo.ico' %}">
     <title>{% site_title %}</title>
     {% load bootstrap4 %}
     {% bootstrap_css %}
@@ -65,7 +66,7 @@
 
     function get_cart(){
         $.get('/cart/get_cart_item', function (response) {
-            if( response.length > 1 ){
+            if( response.hasOwnProperty('total') ){
                 $.each(response.content, function (row, item) {
                     $('#'+item.meal_id).val(item.quantity);
                 });
@@ -113,7 +114,7 @@
     function get_cart_view(){
         $.get('/cart/get_cart_item', function (response) {
             var table = $('#cart_table').find('tbody');
-            if( response.length < 1 ){
+            if( ! response.hasOwnProperty('total') ){
                 table.append('<tr><td colspan="4"><p class="text text-center">There no items in your cart.</p></td></tr>');
                 $("#make-payment").addClass('disabled');
             }
@@ -123,7 +124,7 @@
                     '<td>E£ '+item.price+'</td><<td>'+item.quantity+'</td></tr>';
             });
             table.append(table_content);
-            if( response.length > 1 ){
+            if( response.hasOwnProperty('total') ){
                 $('#total_price').text(' E£ '+ response.prices_total);
                 $('#total_payable_amount').text(' E£ '+ (Number(response.prices_total) + Number($('#total_tax').text())));
             }

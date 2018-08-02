@@ -36,15 +36,17 @@
                             <button type="submit"
                                     class="btn btn-primary"><i class="fas fa-sign-in-alt"></i>&nbsp;Login</button>
                             <a href="/password_reset" class="ml-2 forgot-password-link">Forgot Password</a>
+                            <a href="{% url 'sign_up' %}" class="ml-2 forgot-password-link">Register</a>
                         </div>
                     {% endbuttons %}
                 </form>
+                <p class="footer-text text text-center p-5 mt-3 mx-auto">
+                    {% autoescape off %}
+                        {{ sc.text }} | {{ sc.year }}
+                    {% endautoescape %}
+                </p>
             </div>
+
         </div>
-        <p class="footer-text p-5 mt-3">
-            {% autoescape off %}
-                {{ sc.text }} | {{ sc.year }}
-            {% endautoescape %}
-        </p>
     </div>
 {% endblock %}
