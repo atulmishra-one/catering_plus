@@ -1,0 +1,21 @@
+.dropdown-submenu {
+    position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: 0px;
+    margin-left: 0px;
+}
+
+.dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+}
+
+.bg-dark {
+    background-color: #721c24!important;
+}
+.breadcrumb {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #e9ecef;
+}

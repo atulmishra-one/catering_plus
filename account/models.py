@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=30)
     photo = ProcessedImageField(
         upload_to='accounts/photos/',
-        processors=[ResizeToFill(220, 200)],
+        processors=[ResizeToFill(320, 280)],
         format='PNG',
         options={'quality': 100}
     )

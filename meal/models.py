@@ -32,7 +32,7 @@ class Category(MPTTModel):
         except:
             ancestors = []
         else:
-            ancestors = [ i.slug for i in ancestors]
+            ancestors = [i.slug for i in ancestors]
         slugs = []
         for i in range(len(ancestors)):
             slugs.append('/'.join(ancestors[:i+1]))

@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
+from django.shortcuts import HttpResponse, redirect
 import json
 from .models import Cart, CartItems
 from meal.models import Meal, Category
@@ -7,7 +7,14 @@ from collections import defaultdict
 from order.models import Order
 from datetime import datetime
 
+from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 # Create your views here.
+
+
+class CartView(LoginRequiredMixin, TemplateView):
+    template_name = 'view_cart.html'
 
 
 @login_required
@@ -56,7 +63,7 @@ def remove_from_cart(request):
     content = {}
     if request.method == 'POST':
         meal = Meal.objects.get(pk=request.POST['meal_id'])
-        cart = Cart.objects.get(user=request.user, active=True)
+        cart = Cart.objects.filter(user=request.user, active=True)[0]
         pre_existing_cart = CartItems.objects.get(meal=meal, cart=cart)
         if pre_existing_cart.quantity >= 1:
             pre_existing_cart.quantity -= 1
@@ -71,7 +78,11 @@ def remove_from_cart(request):
 
 @login_required
 def get_cart_item(request):
-    cart = get_object_or_404(Cart, user=request.user, active=True)
+    #cart = get_object_or_404(Cart, user=request.user, active=True)
+    try:
+        cart = Cart.objects.filter(user=request.user, active=True)[0]
+    except IndexError:
+        return HttpResponse(status=200, content=json.dumps([]), content_type='application/json')
     cart_items = cart.cartitems_set.all()
     quantities = defaultdict(list)
     prices = defaultdict(list)
@@ -95,21 +106,16 @@ def get_cart_item(request):
     }
     return HttpResponse(status=200, content=json.dumps(output), content_type='application/json')
 
-
-@login_required
-def view_cart(request):
-    categories = Category.objects.all()
-    breadcrumb = Category.objects.filter(parent=None)
-    return render(request, 'view_cart.html', {'categories': categories, 'breadcrumb': breadcrumb})
-
-
 @login_required
 def make_payment(request):
-    cart = Cart.objects.get(user=request.user, active=True)
-    order = Order.objects.create(cart=cart, order_date=datetime.today())
-    cart.active = False
-    cart.save()
-    order.save()
-    return redirect('/cart/view_cart')
+    try:
+        cart = Cart.objects.filter(user=request.user, active=True)[0]
+        order = Order.objects.create(cart=cart, order_date=datetime.today())
+        cart.active = False
+        cart.save()
+        order.save()
+    except IndexError:
+        return redirect('/meals')
+    return redirect('/cart')
 
 

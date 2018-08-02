@@ -5,24 +5,24 @@ from .forms import UserCreateForm, UserPersonalInfoChangeForm, ProfileForm
 from django.contrib.auth.models import Group
 from .models import Profile
 from django.contrib.auth.decorators import login_required
+from django.views.generic import FormView
+from django.contrib import messages
 
 # Create your views here.
 
 
-def login_view(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        email = form.data['username']
-        password = form.data['password']
+class LoginView(FormView):
+    template_name = 'login.html'
+    form_class = AuthenticationForm
+    success_url = '/meals'
 
-        user = authenticate(request, email=email, password=password)
+    def form_valid(self, form):
+        email = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        user = authenticate(self.request, email=email, password=password)
         if user is not None and user.is_active:
-            login(request, user)
-            return redirect('/profile')
-    else:
-        form = AuthenticationForm()
-
-    return render(request, 'login.html', {'form': form})
+            login(self.request, user)
+        return super().form_valid(form)
 
 
 def sign_up_view(request):
@@ -58,6 +58,10 @@ def client_profile(request):
 def update_personal_info(request):
     if request.method == 'POST':
         form = UserPersonalInfoChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            messages.add_message(request, messages.SUCCESS, 'Saved!')
+            form.save()
+        return redirect('/update_personal_info')
     else:
         form = UserPersonalInfoChangeForm(instance=request.user)
 
@@ -70,6 +74,7 @@ def update_profile(request):
     if request.method == 'POST':
         form = ProfileForm(request.POST, instance=instance)
         if form.is_valid():
+            messages.add_message(request, messages.SUCCESS, 'Saved!')
             form.save()
         return redirect('/profile')
     else:

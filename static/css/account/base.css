@@ -1,0 +1,44 @@
+body{
+    font-family: 'Source Sans Pro', sans-serif;
+    background-image: url("/static/images/wrapper-bg.jpg");
+    background-size: cover;
+}
+
+body > .container-fluid{
+    margin: 100px 0px 0px 0px;
+}
+
+body > .container-fluid > .row{
+    background: #721c24;
+    color: #fff; /*fffccf */
+}
+.box-right{
+    border-left: 3px solid #bd2130;
+    padding-left: 30px;
+}
+h2, h3, h4{
+    color: #fffccf;
+}
+.footer-text{
+    text-align: center;
+    font-size: 14px;
+}
+
+@media (max-width:320px)  {
+    .box-left{
+        display: none;
+    }
+}
+@media (max-width:480px)  {
+    .box-left{
+        display: none;
+    }
+}
+@media (max-width:600px) {
+    .box-left{
+        display: none;
+    }
+}
+.forgot-password-link{
+    color: #cc303f !important;
+}

@@ -25,7 +25,7 @@ AdminSite.index_title = "Catering Plus"
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('account.urls')),
-    path('dashboard/', include('meal.urls')),
+    path('meals/', include('meal.urls'), name='meals'),
     path('cart/', include('cart.urls')),
-    path('order/', include('order.urls'))
+    path('orders/', include('order.urls'))
 ]

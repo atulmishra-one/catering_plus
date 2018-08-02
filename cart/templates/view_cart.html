@@ -1,214 +1,66 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Welcome to Catering & Banquet Plus - Login</title>
-    {% load bootstrap4 %}
-    {% bootstrap_css %}
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
-          integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-    <style>
-        html {
-            position: relative;
-            min-height: 100%;
-        }
-        body{
-            background: #f8f9fa !important;
-            font-family: 'Avenir Next Pro', sans-serif;
-            font-size: 14px;
-        }
-        .dropdown-submenu {
-            position: relative;
-        }
-        .dropdown-submenu>.dropdown-menu {
-            top: 0;
-            left: 100%;
-            margin-top: 0px;
-            margin-left: 0px;
-        }
-
-        .dropdown-submenu:hover>.dropdown-menu {
-            display: block;
-        }
-        .badge{
-            font-size: 12px !important;
-            font-weight: bold !important;
-        }
-    </style>
-
-</head>
-<body>
-{% load mptt_tags %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Catering & Banquet Pluss</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active ml-5">
-                <a class="nav-link" href="/dashboard">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item dropdown ml-5">
-                <a id="navbarDropdown" role="button" data-toggle="dropdown" class="nav-link dropdown-toggle"
-                   href="" aria-haspopup="true" aria-expanded="false">
-                    Menu
-                </a>
-
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    {% recursetree categories %}
-                        <li class="dropdown-submenu">
-                            <a class="dropdown-item" href={{ node.slug }} >{{ node }}</a>
-                            {% if children %}
-                                <ul class="dropdown-menu">
-                                    {{ children }}
-                                </ul>
-                            {% endif %}
-                        </li>
-                    {% endrecursetree %}
-                </ul>
-
-            </li>
-            <li class="nav-item dropdown ml-5">
-                <a class="nav-link dropdown-toggle"
-                   href="#" id="navbarDropdown" role="button"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Order
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">New Order</a>
-                    <a class="dropdown-item" href="#">History</a>
-                    <a class="dropdown-item" href="#">Complain</a>
-                    <a class="dropdown-item" href="#">Track your order</a>
-                </div>
-            </li>
-            <li class="nav-item dropdown ml-5">
-                <a class="nav-link dropdown-toggle"
-                   href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Profile
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Settings</a>
-                    <a class="dropdown-item" href="/change_password">Change Password</a>
-                </div>
-            </li>
-            <li class="nav-item ml-5">
-                <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i></a>
-            </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0 ml-5">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-    </div>
-</nav>
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb mb-5">
-        {% for foo in breadcrumb %}
-            <li class="breadcrumb-item">
-                <a href="{{ foo.slug }}">{{ foo }}</a>
-            </li>
-        {% endfor %}
-    </ol>
-</nav>
-<div class="container mb-5">
-    <h2>Cart</h2>
-    <div class="row">
-        <div class="mx-auto col-md-12">
-        <table class="table w-100 table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>S.no</th>
-                    <th>Meal</th>
-                    <th>Price</th>
-                    <th>Qty</th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="4">
-                        <h4>Bill</h4>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Item total
-                    </td>
-                    <td colspan="3">
-                        <span id="total_price"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Tax
-                    </td>
-                    <td colspan="3">
-                        <span id="total_tax">20</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="4">
-                        <p class="text text-success">Delivery  Charges Free</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>To pay </p>
-                    </td>
-                    <td colspan="3">
-                        <strong id="total_payable_amount"></strong>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="4">
-                        <a class="btn btn-success float-sm-left" href="/cart/make_payment">Make Payment</a>
-                        <a href="/dashboard" class="btn btn-danger float-sm-right">Back</a>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+{% extends 'base_one.html' %}
+{% block content %}
+    <h1 class="jumbotron-heading mb-4 ml-4">Cart</h1>
+    <div class="row ml-2 mr-2 mb-5">
+        <div class="col-sm-12">
+            <div class="table-responsive mb-5" style="background: #FFFF;">
+                <table class="table table-hover" id="cart_table">
+                    <thead style="background: #000; color: #FFF;">
+                    <tr>
+                        <th>Item</th>
+                        <th>Meal</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <h4>Bill</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Item total
+                        </td>
+                        <td colspan="3">
+                            <span id="total_price"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Tax
+                        </td>
+                        <td colspan="3">
+                            <span id="total_tax">0</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <p class="text text-success">Delivery Charges Free</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>To pay </p>
+                        </td>
+                        <td colspan="3">
+                            <strong id="total_payable_amount"></strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <a class="btn btn-success float-sm-left"
+                               href="{% url 'make_payment' %}" id="make-payment">Make Payment</a>
+                            <a href="{% url 'meals_list' %}"
+                               class="btn btn-danger float-sm-right">Back</a>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     </div>
-</div>
-{% bootstrap_javascript jquery='full' %}
-<script>
-    $(".btn-group, .dropdown").hover(
-        function () {
-            $('>.dropdown-menu', this).stop(true, true).fadeIn("fast");
-            $(this).addClass('open');
-        },
-        function () {
-            $('>.dropdown-menu', this).stop(true, true).fadeOut("fast");
-            $(this).removeClass('open');
-        });
-
-    function get_cart(){
-        $.get('/cart/get_cart_item', function (response) {
-            console.log(response);
-            var table = $('table').find('tbody');
-            var table_content = '';
-            $.each(response.content, function (row, item) {
-                table_content += '<tr><td>'+(row+1)+'</td><td>'+item.meal_name+'</td>' +
-                    '<td>E£ '+item.price+'</td><<td>'+item.quantity+'</td></tr>';
-            });
-
-            table.append(table_content);
-
-            $('#total_price').text(' E£ '+ response.prices_total);
-            $('#total_payable_amount').text(' E£ '+ (Number(response.prices_total) + Number($('#total_tax').text())));
-        });
-    }
-
-    get_cart();
-
-</script>
-</body>
-</html>
-
+{% endblock %}

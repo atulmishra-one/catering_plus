@@ -1,0 +1,72 @@
+{% load mptt_tags %}
+{% load site %}
+{% site_copyright as sc %}
+{% load menu %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">{% site_title %}</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active ml-5">
+                <a class="nav-link" href="{% url 'meals_list' %}">
+                    <i class="fas fa-home"></i>&nbsp;&nbsp;Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item dropdown ml-5">
+                <a id="navbarDropdown" role="button" data-toggle="dropdown" class="nav-link dropdown-toggle"
+                   href="" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-utensils"></i>&nbsp; Menu
+                </a>
+
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {% recursetree categories %}
+                        <li class="dropdown-submenu">
+                            <a class="dropdown-item" href="{% url 'meals_list' %}{{ node.get_slug_list | get_slugs }}">{{ node }}</a>
+                            {% if children %}
+                                <ul class="dropdown-menu">
+                                    {{ children }}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endrecursetree %}
+                </ul>
+
+            </li>
+            <li class="nav-item dropdown ml-5">
+                <a class="nav-link dropdown-toggle"
+                   href="#" id="navbarDropdown" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-shopping-cart"></i>&nbsp; Order
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'order_list' %}">History</a>
+                    <a class="dropdown-item" href="#">Complain</a>
+                    <a class="dropdown-item" href="{% url 'order_list' %}">Track your order</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown ml-5">
+                <a class="nav-link dropdown-toggle"
+                   href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-user"></i> &nbsp; {{ get_current_user|title }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item"><img src="{{ get_current_user.photo.url }}"></a>
+                    <a class="dropdown-item" href="{% url 'profile' %}">Settings</a>
+                    <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
+                </div>
+            </li>
+            <li class="nav-item ml-5">
+                <a class="nav-link" href="{% url 'logout' %}">Logout&nbsp; <i class="fas fa-sign-out-alt"></i></a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0 ml-5">
+            <input class="form-control mr-sm-2 input-sm" type="search"
+                   placeholder="Explore..." aria-label="Search">
+            <button class="btn btn-danger my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
+        </form>
+    </div>
+</nav>

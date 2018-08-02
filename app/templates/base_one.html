@@ -1,0 +1,138 @@
+{% load site %}
+{% site_copyright as sc %}
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% site_title %}</title>
+    {% load bootstrap4 %}
+    {% bootstrap_css %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+          integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/app/menu.css' %}">
+    <style>
+        body{
+            font-family: 'Source Sans Pro', sans-serif;
+            background-image: url("{% static 'images/wrapper-bg.jpg' %}");
+            background-size: cover;
+        }
+        html {
+            position: relative;
+            min-height: 100%;
+        }
+        footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            /* Set the fixed height of the footer here */
+            height: 55px;
+            line-height: 30px; /* Vertically center the text there */
+            background-color: #721c24;
+        }
+        .card-title {
+            color: #8e6b2b;
+        }
+        .card-body{
+            color: #b8860b !important;
+        }
+        .jumbotron-heading{
+            margin-top: -30px; color: #721c24;
+        }
+    </style>
+</head>
+<body>
+{% load menu %}
+{% menus %}
+{% breadcrumb %}
+<div class="container-fluid">
+    {% block content %} {% endblock %}
+</div>
+{% bootstrap_javascript jquery='full' %}
+<script>
+    $(".btn-group, .dropdown").hover(
+        function () {
+            $('>.dropdown-menu', this).stop(true, true).fadeIn("fast");
+            $(this).addClass('open');
+        },
+        function () {
+            $('>.dropdown-menu', this).stop(true, true).fadeOut("fast");
+            $(this).removeClass('open');
+        });
+
+    function get_cart(){
+        $.get('/cart/get_cart_item', function (response) {
+            if( response.length > 1 ){
+                $.each(response.content, function (row, item) {
+                    $('#'+item.meal_id).val(item.quantity);
+                });
+
+                $('#cart_total').text(response.total + '  item    |    E£  '+ response.prices_total);
+            }
+        });
+    }
+
+    get_cart();
+    $('.add_to_cart').click(function (e) {
+        e.preventDefault();
+        meal_id = $(this).data('meal_id');
+        $.ajax({
+            url: '/cart/add_to_cart',
+            type: 'POST',
+            data: {meal_id: meal_id, csrfmiddlewaretoken: '{{ csrf_token }}'}
+        }).done(function (response) {
+            $('#' + meal_id).val(response.quantity);
+        }).fail(function (xhr) {
+
+        }).always(function () {
+            get_cart();
+        });
+    });
+
+    $('.remove_from_cart').click(function (e) {
+        e.preventDefault();
+        meal_id = $(this).data('meal_id');
+        $.ajax({
+            url: '/cart/remove_from_cart',
+            type: 'POST',
+            data: {meal_id: meal_id, csrfmiddlewaretoken: '{{ csrf_token }}'}
+        }).done(function (response) {
+            $('#' + meal_id).val(response.quantity);
+        }).fail(function (xhr) {
+
+        }).always(function () {
+            get_cart();
+        });
+    });
+
+    /** View Cart **/
+
+    function get_cart_view(){
+        $.get('/cart/get_cart_item', function (response) {
+            var table = $('#cart_table').find('tbody');
+            if( response.length < 1 ){
+                table.append('<tr><td colspan="4"><p class="text text-center">There no items in your cart.</p></td></tr>');
+                $("#make-payment").addClass('disabled');
+            }
+            var table_content = '';
+            $.each(response.content, function (row, item) {
+                table_content += '<tr><td>'+(row+1)+'</td><td>'+item.meal_name+'</td>' +
+                    '<td>E£ '+item.price+'</td><<td>'+item.quantity+'</td></tr>';
+            });
+            table.append(table_content);
+            if( response.length > 1 ){
+                $('#total_price').text(' E£ '+ response.prices_total);
+                $('#total_payable_amount').text(' E£ '+ (Number(response.prices_total) + Number($('#total_tax').text())));
+            }
+
+        });
+    }
+    get_cart_view();
+    $('#id_photo').parent().find('a').hide();
+    $('#id_photo').parent().append('<img src="'+$('#id_photo').parent().find('a').attr('href')+'" class="w-25 img" />');
+</script>
+</body>
+</html>

@@ -1,59 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Welcome to Catering & Banquet Plus - Sign up</title>
-    {% load bootstrap4 %}
-    {% bootstrap_css %}
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
-          integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-    <style>
-        body{
-            background: #f8f9fa !important;
-        }
-    </style>
+{% extends 'base.html' %}
 
-</head>
-<body>
-<div class="container">
-    <div class="row mt-5">
-        <div class="col-sm-6 mx-auto mt-5">
-            <h1 class="text">Catering <span style="color: red;">&</span> Banquet <span style="color: red;">Pluss</span></h1>
-            <br><br>
-            <address>
-                <small>
-                    4B Al-Sahaba, <br>
-                    Al-Keram St., Al-Sefarat Zone, <br>
-                    Nasr City, Cairo 11471. Eqypt.
-                </small>
-                <ul class="list-inline">
-                    <li class="list-inline-item"><i class="fas fa-at"></i> info@cateringpluss.com</li>
-                    <li class="list-inline-item"><i class="fas fa-phone"></i> +20 223 522 675</li>
-                    <li class="list-inline-item"><i class="fas fa-fax"></i> +20 223 522 677</li>
-                </ul>
-            </address>
-        </div>
-        <div class="col-sm-6 mx-auto mt-5">
-            {% bootstrap_messages %}
-            <form method="post" class="form" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% bootstrap_form form %}
-                {% buttons %}
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-user-plus"></i>&nbsp;Sign up</button>
-                    <a class="btn btn-info" href="/">&nbsp;<i class="fas fa-sign-in-alt"></i> Login</a>
-                {% endbuttons %}
-            </form>
-        </div>
-    </div>
-    <div class="row mt-5">
-        <div class="col-lg-12">
-            <hr>
-            <small class="ml-5">Copyright &copy; 2020. All rights reserved!</small>
-        </div>
-    </div>
-</div>
+{% load bootstrap4 %}
 
-{% bootstrap_javascript jquery='full' %}
-</body>
-</html>
+{% block content %}
+    <div class="col-sm-10 mt-5 ml-5 mr-5">
+        <h4 class="">Sign up</h4>
+        {% bootstrap_messages %}
+        <form method="post" class="form mb-5 mt-5" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <div class="mt-5">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i>&nbsp;Sign up</button>
+                    <a href="/"
+                       class="btn btn-primary"><i class="fas fa-sign-in-alt"></i>&nbsp;Login</a>
+                </div>
+            {% endbuttons %}
+        </form>
+    </div>
+{% endblock %}

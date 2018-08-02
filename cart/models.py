@@ -10,9 +10,10 @@ class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
     meals = models.ManyToManyField(Meal, through='CartItems')
+    date_added = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-id']
+        ordering = ['id']
 
     def __str__(self):
         return self.user.email

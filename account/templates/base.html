@@ -1,0 +1,25 @@
+{% load site %}
+{% site_copyright as sc %}
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% site_title %}</title>
+    {% load bootstrap4 %}
+    {% bootstrap_css %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+          integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+          crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "css/account/base.css" %}">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row mt-5 mx-auto w-75">
+        {% block content %}{% endblock %}
+    </div>
+</div>
+{% bootstrap_javascript jquery='full' %}
+</body>
+</html>

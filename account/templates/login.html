@@ -1,60 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Welcome to Catering & Banquet Plus - Login</title>
-    {% load bootstrap4 %}
-    {% bootstrap_css %}
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
-          integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-    <style>
-        body{
-            background: #f8f9fa !important;
-        }
-    </style>
+{% extends 'base.html' %}
 
-</head>
-<body>
-<div class="container">
-    <div class="row mt-5">
-        <div class="col-sm-7 mx-auto mt-5">
-            <h1 class="text">Catering <span style="color: red;">&</span> Banquet <span style="color: red;">Pluss</span></h1>
-            <br><br>
-            <address>
-                <small>
-                    4B Al-Sahaba, <br>
-                    Al-Keram St., Al-Sefarat Zone, <br>
-                    Nasr City, Cairo 11471. Eqypt.
-                </small>
-                <ul class="list-inline">
-                    <li class="list-inline-item"><i class="fas fa-at"></i> info@cateringpluss.com</li>
-                    <li class="list-inline-item"><i class="fas fa-phone"></i> +20 223 522 675</li>
-                    <li class="list-inline-item"><i class="fas fa-fax"></i> +20 223 522 677</li>
-                </ul>
-            </address>
+{% load bootstrap4 %}
+
+{% load site %}
+
+{% load static from staticfiles %}
+
+{% block content %}
+
+    <div class="col-sm-4 mx-auto box-left">
+        <div class="row mt-5 mb-5">
+            <div class="col-sm-12">
+                <img src="{% static 'images/logo.png' %}" class="img mb-5">
+            </div>
         </div>
-        <div class="col-sm-5 mx-auto mt-5">
-            {% bootstrap_messages %}
-            <form method="post" class="form">
-                {% csrf_token %}
-                {% bootstrap_form form %}
-                {% buttons %}
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i>&nbsp;Login</button>
-                    <a class="btn btn-info" href="/sign_up"><i class="fas fa-user-plus"></i>&nbsp;Sign up</a>
-                    <a href="/password_reset">Forgot Password</a>
-                {% endbuttons %}
-            </form>
+        <div class="row mt-5 mb-5">
+            <div class="col-sm-12 mt-5">
+                <p><h4>Don't have an account ?</h4>
+                <div class=" mb-2">Use your email address to sign up now.</div>
+                <a class="btn btn-success btn-lg mt-5"
+                   href="/sign_up" tabindex="1">Register Now &nbsp;&nbsp;<i class="fas fa-user-plus"></i>&nbsp;</a>
+                </p>
+            </div>
         </div>
     </div>
-    <div class="row mt-5">
-        <div class="col-lg-12">
-            <hr>
-            <small class="ml-5">Copyright &copy; 2020. All rights reserved!</small>
+    <div class="col-sm-6 mx-auto box-right">
+        <div class="row mt-5">
+            <div class="col-sm-12">
+                <h4 class="">Login into your account</h4>
+                <form method="post" class="form mb-5 mt-5">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    {% buttons %}
+                        <div class="mt-5">
+                            <button type="submit"
+                                    class="btn btn-primary"><i class="fas fa-sign-in-alt"></i>&nbsp;Login</button>
+                            <a href="/password_reset" class="ml-2 forgot-password-link">Forgot Password</a>
+                        </div>
+                    {% endbuttons %}
+                </form>
+            </div>
         </div>
+        <p class="footer-text p-5 mt-3">
+            {% autoescape off %}
+                {{ sc.text }} | {{ sc.year }}
+            {% endautoescape %}
+        </p>
     </div>
-</div>
-
-{% bootstrap_javascript jquery='full' %}
-</body>
-</html>
+{% endblock %}
