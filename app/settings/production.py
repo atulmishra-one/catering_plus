@@ -13,7 +13,7 @@ DATABASES = {
         'NAME': 'catering',
         'HOST': '127.0.0.1',
         'USER': 'root',
-        'PASSWORD': 'root'
+        'PASSWORD': 'root123'
     }
 }
 
