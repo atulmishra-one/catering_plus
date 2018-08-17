@@ -1,18 +1,33 @@
 from django.contrib import admin
 from .models import User, Department, Profile
 from django.contrib.auth.models import Group
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from .forms import UserChangeForm, UserCreationForm
 
 
 # Register your models here.
 
 
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(BaseUserAdmin):
+    form = UserChangeForm
+    add_form = UserCreationForm
+
     list_display = ('full_name', 'email', 'date_joined', 'is_active', 'departments', )
-    fields = (('first_name', 'last_name'), ('email', 'password'), ('phone_number', ),
-              ('groups', 'user_permissions'), ('is_superuser', 'photo'), ('is_active', 'is_staff'))
+    # fieldsets = (('first_name', 'last_name'), ('email', 'password'), ('phone_number', ),
+    #           ('groups', 'user_permissions'), ('is_superuser', 'photo'), ('is_active', 'is_staff'))
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('first_name', 'last_name', 'email', 'password', 'phone_number','groups',
+                       'user_permissions', 'is_superuser', 'photo', 'is_active', 'is_staff')}
+         ),
+    )
 
     list_filter = ('is_staff', 'is_active', 'date_joined', 'groups')
     search_fields = ('full_name', )
+
+    ordering = ('email', )
 
     @classmethod
     def full_name(cls, obj):
