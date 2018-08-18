@@ -1,7 +1,5 @@
 from django.db import models
 from cart.models import Cart
-from meal.models import Meal
-from account.models import User
 
 # Create your models here.
 

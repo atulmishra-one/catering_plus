@@ -1,5 +1,5 @@
 from django.db import models
-from account.models import User
+from account.models import CaterUser
 
 # Create your models here.
 
@@ -7,7 +7,7 @@ from account.models import User
 class RawMaterial(models.Model):
     subject = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    sender = models.ForeignKey(CaterUser, on_delete=models.CASCADE)
     notes = models.TextField(blank=True)
     date_send = models.DateTimeField(default=None)
     updated = models.DateTimeField(auto_now_add=True)

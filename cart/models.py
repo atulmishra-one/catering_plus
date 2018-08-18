@@ -1,13 +1,13 @@
 from django.db import models
 # from order.models import Order
 from meal.models import Meal
-from account.models import User
+from account.models import CaterUser
 
 # Create your models here.
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CaterUser, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
     meals = models.ManyToManyField(Meal, through='CartItems')
     date_added = models.DateTimeField(auto_now_add=True)

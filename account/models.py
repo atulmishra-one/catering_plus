@@ -34,8 +34,11 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+    def get_by_natural_key(self, email_):
+        return self.get(email=email_)
 
-class User(AbstractBaseUser, PermissionsMixin):
+
+class CaterUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name='Email Address', unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
@@ -43,7 +46,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         upload_to='accounts/photos/',
         processors=[ResizeToFill(320, 280)],
         format='PNG',
-        options={'quality': 100}
+        options={'quality': 100},
+        blank=True
     )
     phone_number = PhoneNumberField(blank=True)
 
@@ -57,6 +61,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
+    def natural_key(self):
+        return self.email
+
     def __str__(self):
         return "{0} {1}".format(self.first_name, self.last_name)
 
@@ -68,7 +75,7 @@ class Department(Group):
 
 
 class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CaterUser, on_delete=models.CASCADE)
     address_line_1 = models.CharField(max_length=255)
     address_line_2 = models.CharField(max_length=255)
     city = models.CharField(max_length=64, blank=True)
