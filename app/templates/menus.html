@@ -54,7 +54,9 @@
                     <i class="fas fa-user"></i> &nbsp; {{ get_current_user|title }}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {% if get_current_user.photo %}
                     <a class="dropdown-item"><img src="{{ get_current_user.photo.url }}"></a>
+                    {% endif %}
                     <a class="dropdown-item" href="{% url 'profile' %}">Settings</a>
                     <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
                 </div>

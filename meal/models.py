@@ -3,6 +3,8 @@ from mptt.models import MPTTModel, TreeForeignKey
 from decimal import Decimal
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
+from autoslug import AutoSlugField
+from django.core.validators import MinValueValidator
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -11,7 +13,9 @@ from django.utils.translation import ugettext_lazy as _
 
 class Category(MPTTModel):
     name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField()
+    slug = AutoSlugField(populate_from=lambda instance: instance.name,
+                         slugify=lambda value: value.replace(' ', '-'))
+    #slug = models.SlugField()
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True,
                             on_delete=models.CASCADE)
 
@@ -19,7 +23,7 @@ class Category(MPTTModel):
         order_insertion_by = ['name']
 
     class Meta:
-        unique_together= (('parent', 'slug'), )
+        unique_together = (('parent', 'slug'), )
         verbose_name_plural = 'categories'
         app_label = 'meal'
 
@@ -44,7 +48,8 @@ class Meal(models.Model):
     name = models.CharField(max_length=100, blank=True)
     category = TreeForeignKey('Category', null=True, blank=True, db_index=True, on_delete=models.CASCADE)
     description = models.TextField()
-    price = models.DecimalField(max_digits=6, decimal_places=2, default=Decimal('0.00'), null=True, blank=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2, default=Decimal('0.00'), null=True,
+                                blank=True, validators=[MinValueValidator(Decimal('0.00'))])
     image = ProcessedImageField(
         upload_to='meals/image/',
         processors=[ResizeToFill(220, 200)],

@@ -45,6 +45,10 @@ class CategoryAdmin(DraggableMPTTAdmin):
 class MealAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'category', 'price')
 
+    list_select_related = (
+        'category',
+    )
+
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Meal, MealAdmin)
