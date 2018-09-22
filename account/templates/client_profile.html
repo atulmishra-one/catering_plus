@@ -4,9 +4,11 @@
     <div class="row ml-2 mr-2 mb-5 mt-2">
            <div class="col-sm-3">
                <ul class="list-group">
+                   {% if user.photo %}
                    <a>
                        <img src="{{ user.photo.url }}" class="img img-thumbnail">
                    </a>
+                   {% endif %}
                    <a href="/update_personal_info" class="list-group-item list-group-item-action">
                        Edit Personal Info
                    </a>

@@ -1,0 +1,65 @@
+{% extends 'base_one.html' %}
+
+{% block content %}
+<h1 class="jumbotron-heading mb-4 ml-4">Meals</h1>
+<div class=" mb-4 float-right">
+    <i class="fas fa-table"></i> &nbsp; <i class="fas fa-list-ul"></i>
+</div>
+<div class="row ml-2 mr-2 mb-5">
+    <div class="col-md-12 col-sm-12">
+        <div class="table-responsive">
+            <table class="table table-condensed" style="background: #FFFF;">
+                <thead>
+                    <tr style="font-weight:bold; font-size:16px;">
+                        <td>#</td>
+                        <td>Name</td>
+                        <td>Desc</td>
+                        <td>Category</td>
+                        <td>Price</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </thead>
+                <tbody style="color: #b8860b !important;">
+                 {% for meal in meals %}
+                    <tr>
+                        <td>{% if meal.image %} {{ meal.image.url }} {% endif %}</td>
+                        <td>{{ meal.name }}</td>
+                        <td>{{ meal.description }}</td>
+                        <td>{{ meal.category }}</td>
+                        <td><span class="badge badge-success">E£ {{ meal.price }}</span></td>
+                        <td class="w-25 mx-auto">
+                            <div class="input-group cart_item mx-auto w-50">
+                            <div class="input-group-prepend">
+                                <button class="btn input-group-text add_to_cart"
+                                        data-meal_id="{{ meal.id }}">
+                                    <i class="fas fa-plus"></i></button>
+                            </div>
+                            <input type="number" class="form-control" aria-describedby="btnGroupAddon"
+                                   id="{{ meal.id }}" value="0">
+                            <div class="input-group-append">
+                                <button class="btn input-group-text remove_from_cart"
+                                        data-meal_id="{{ meal.id }}">
+                                    <i class="fas fa-minus"></i></button>
+                            </div>
+                        </div>
+                        </td>
+                    </tr>
+                 {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<footer class="mt-5 p-2">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <button id="cart_total" class="float-lg-left btn btn-danger" style="font-size: 18px;"> </button>
+                    <a class="btn btn-danger float-lg-right" href="{% url 'view_cart' %}">View Cart&nbsp;&nbsp;
+                        <i class="fas fa-shopping-bag"></i></a>
+                </div>
+            </div>
+        </div>
+</footer>
+{% endblock %}
