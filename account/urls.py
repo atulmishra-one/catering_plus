@@ -7,7 +7,7 @@ from . import views
 urlpatterns = [
     path('', views.LoginView.as_view(), name='login'),
     path('password_reset/', PasswordResetView.as_view(template_name='reset_password.html'), name='password_reset'),
-    path('password_reset/done', PasswordResetDoneView.as_view(),
+    path('password_reset/done', PasswordResetDoneView.as_view(template_name='reset_password_done.html'),
          name='password_reset_done'),
     path('password_reset/confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('password_reset/complete', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
