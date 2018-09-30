@@ -139,4 +139,8 @@ PHONENUMBER_DEFAULT_REGION = 'IN'
 SITE_TITLE = 'Catering & Banquet Plus'
 
 
+EMAIL_USE_SSL = True
 
+EMAIL_HOST = 'smtp.gmail.com'
+
+EMAIL_PORT = 465
