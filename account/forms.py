@@ -6,7 +6,8 @@ from django import forms
 class UserCreateForm(UserCreationForm):
     class Meta:
         model = CaterUser
-        exclude = ('user_permissions', 'groups', 'is_superuser', 'last_login', 'password', 'is_active', 'is_staff')
+        exclude = ('user_permissions', 'groups', 'is_superuser', 'last_login', 'password', 'is_active', 'is_staff',
+                   'photo', )
 
         def save(self, commit=True):
             user = super().save(commit=False)
